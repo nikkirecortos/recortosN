@@ -19,110 +19,116 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.mlabs.bbm.firstandroidapp_morningclass.DatabaseAdapter.registerUser;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-public class Registerform extends AppCompatActivity {
-    DatabaseAdapter db;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    Button btnSend;
-    EditText regEmail, regPass, regConPass;
 
-
+public class Registerform extends Activity{
+    EditText first, sur, user, email,pwd1,pwd2;
+    Button reg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        Context context = this;
-        final DatabaseAdapter DataBaseAdapter;
-        DataBaseAdapter = new DatabaseAdapter(this);
+        first = (EditText)findViewById(R.id.etFirst);
+        sur = (EditText)findViewById(R.id.etLast);
+        user = (EditText)findViewById(R.id.etUsername);
+        email = (EditText)findViewById(R.id.regEmail);
+        pwd1 = (EditText)findViewById(R.id.regPass);
+        pwd2 = (EditText)findViewById(R.id.regConPass);
+        reg = (Button)findViewById(R.id.btnSend);
 
-        DataBaseAdapter.open();
-
-        regEmail = (EditText) findViewById(R.id.regEmail);
-        regPass = (EditText) findViewById(R.id.regPass);
-        regConPass = (EditText) findViewById(R.id.regConPass);
-        btnSend = (Button) findViewById(R.id.btnSend);
-        addAcct();
-
-    }
-
-
-    public void addAcct() {
-        btnSend.setOnClickListener(new View.OnClickListener() {
-                                       @Override
-                                       public void onClick(View v) {
-                                           String email = regEmail.getText().toString().trim();
-                                           String password = regPass.getText().toString();
-                                           String confirmPassword = regConPass.getText().toString();
-
-                                           final String email1 = regEmail.getText().toString();
-                                           final String pass1 = regPass.getText().toString();
-                                           final String conPass1 = regConPass.getText().toString();
-
-
-                                           if (email.equals("") || (password.equals("") || (confirmPassword.equals("")))) {
-                                               Toast.makeText(getApplicationContext(), "Please complete all Fields", Toast.LENGTH_LONG).show();
-                                               return;
-
-                                           }
-                                           if (!isValidEmail(email1)) {
-                                               regEmail.setError("Invalid Email");
-
-
-                                           } else if (!isValidPassword(pass1)) {
-                                               regPass.setError("Invalid Password");
-
-
-                                           }
-
-                                           if (!pass1.equals(conPass1)) {
-                                               Toast.makeText(getApplicationContext(), "Password does not match!", Toast.LENGTH_LONG).show();
-                                               return;
-                                           } else {
-                                               DatabaseAdapter.registerUser(email1, pass1, GetCurrentDateAndTime());
-                                               Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
-                                               Intent i = new Intent(Registerform.this, MainActivity.class);
-                                               startActivity(i);
-                                               finish();
-
-                                           }
-
-                                       }
-
-
-                                       private boolean isValidEmail(String email) {
-                                           String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                                                   + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-                                           Pattern pattern = Pattern.compile(emailPattern);
-                                           Matcher matcher = pattern.matcher(email);
-                                           return matcher.matches();
-                                       }
-
-
-                                       private boolean isValidPassword(String password) {
-                                           if (password != null && password.length() > 8) {
-                                               return true;
-                                           }
-                                           return false;
-
-                                       }
-
-                                       public String GetCurrentDateAndTime() {
-                                           DateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                                           Date date = new Date();
-                                           System.out.println(dateformat.format(date));
-                                           return dateformat.format(date).toString();
-
-                                       }
-                                   }
-        );
+        reg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (check()) {
+                    DatabaseAdapter sqlDB = new DatabaseAdapter(Registerform.this);
+                    if (sqlDB.checkExist(user.getText().toString().trim(), email.getText().toString().trim())){
+                        Toast.makeText(getApplicationContext(),"Registration failed! Email/username already in use.", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        sqlDB.registeruser("","","",email.getText().toString().trim(),pwd1.getText().toString().trim(),getDate());
+                        Toast.makeText(getApplicationContext(),"Registration success!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Registerform.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Registration failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onPause(){
+        super.onPause();
+        super.finish();
+    }
+
+    public Boolean check(){
+        String _first = first.getText().toString();
+        String _surname = sur.getText().toString();
+        String _user = user.getText().toString();
+        String _email = email.getText().toString();
+        String _pwd1 = pwd1.getText().toString();
+        String _pwd2 = pwd2.getText().toString();
+
+        Pattern email_pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+        Pattern name = Pattern.compile("^[A-Z][a-z]+( [A-Z][a-z]+)?$");
+        Matcher email = email_pattern.matcher(_email);
+        Matcher user = email_pattern.matcher(_user);
+        Matcher fname = name.matcher(_first);
+        Matcher sname = name.matcher(_surname);
 
 
+        if (_first.isEmpty() || !fname.matches()) {
+            Toast.makeText(getApplicationContext(),"Invalid First name", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (_surname.isEmpty() || !sname.matches()) {
+            Toast.makeText(getApplicationContext(),"Invalid Surname", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (_user.isEmpty() || user.matches()) {
+            Toast.makeText(getApplicationContext(),"Invalid username", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (_email.isEmpty() || !email.matches()) {
+            Toast.makeText(getApplicationContext(),"Invalid email", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (_pwd1.isEmpty() || _pwd2.isEmpty()) {
+            Toast.makeText(getApplicationContext(),"Password is/are empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (_pwd1.length() < 8 || _pwd2.length() < 8){
+            Toast.makeText(getApplicationContext(),"Password too short. Should be 8 characters or longer", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!_pwd1.equals(_pwd2)) {
+            Toast.makeText(getApplicationContext(),"Passwords do not match", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    public String getDate(){
+        DateFormat df = new SimpleDateFormat("EEEE, d MMM yyyy, HH:mm");
+        String date = df.format(Calendar.getInstance().getTime());
+        return date;
     }
 }
