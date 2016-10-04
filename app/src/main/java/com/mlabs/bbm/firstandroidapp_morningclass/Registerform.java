@@ -63,20 +63,20 @@ public class Registerform extends Activity{
                         Toast.makeText(getApplicationContext(),"Registration success!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Registerform.this, MainActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"Registration failed", Toast.LENGTH_SHORT).show();
+
                 }
+
+
             }
         });
     }
 
-    @Override
-    public void onPause(){
-        super.onPause();
-        super.finish();
-    }
+
 
     public Boolean check(){
         String _first = first.getText().toString();
@@ -124,11 +124,19 @@ public class Registerform extends Activity{
             return false;
         }
         return true;
+
     }
 
     public String getDate(){
         DateFormat df = new SimpleDateFormat("EEEE, d MMM yyyy, HH:mm");
         String date = df.format(Calendar.getInstance().getTime());
         return date;
+
     }
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(Registerform.this, MainActivity.class);
+        startActivity(intent);
+    }
+
 }

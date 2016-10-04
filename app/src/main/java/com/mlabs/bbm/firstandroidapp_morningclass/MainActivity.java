@@ -29,44 +29,32 @@ public class MainActivity extends AppCompatActivity {
         final Button btnSignup = (Button) findViewById(R.id.btnSignup);
         final Button btnLogin = (Button) findViewById(R.id.btnLogin);
         final Button btnShow = (Button) findViewById(R.id.btnShow);
+        final Button btnOntouch = (Button) findViewById(R.id.btnOntouch);
         final DatabaseAdapter sqlDB = new DatabaseAdapter(getApplicationContext());
         final Context context = this;
 
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        btnShow.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
 
-                btnShow.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-//                  if(motionEvent.getAction() == MotionEvent.ACTION_DOWN)
-//                    {
-//                        passWord.setTransformationMethod(null);
-//                        Show.setText("Hide");
-//                        return true;
-//                    }
-//                  else
-//                  {
-//                   passWord.setTransformationMethod(new PasswordTransformationMethod());
-//                      return false;
-//                  }
-                        switch (motionEvent.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                password.setTransformationMethod(null);
-                                return true;
-                            case MotionEvent.ACTION_UP:
-                                password.setTransformationMethod(new PasswordTransformationMethod());
-                                return false;
-                            default:
-                                return false;
+            public boolean onTouch(View view, MotionEvent motionEvent) {
 
-
-                        }
-
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        password.setTransformationMethod(null);
+                        password.setSelection(password.getText().length());
+                        return true;
                     }
+                    case MotionEvent.ACTION_UP: {
+                        password.setTransformationMethod(new PasswordTransformationMethod());
+                        password.setSelection(password.getText().length());
+                        return true;
+                    }
+                }
+                return false;
+            }
 
-                });
+        });
                 btnLogin.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
@@ -89,14 +77,23 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 btnSignup.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(MainActivity.this, Registerform.class);
-                        startActivity(i);
-                    }
+                                                 @Override
+                                                 public void onClick(View v) {
+                                                     Intent i = new Intent(MainActivity.this, Registerform.class);
+                                                     startActivity(i);
+                                                 }
+                                             });
 
-                });
+            btnOntouch.setOnClickListener(new View.OnClickListener()
+
+            {
+                @Override
+               public void onClick(View v){
+                Intent i = new Intent(MainActivity.this,OnTouch.class);
+                startActivity(i);
             }
+
+            });}
 
                 private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
                 private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
@@ -121,12 +118,15 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, blank.class);
 
                 startActivity(i);
-            }});
-    }
+            }
 
             protected void onPause() {
                 super.onPause();
                 finish();
             }
+    public void onBackPressed()
+    {
+        moveTaskToBack(true);
+    }
 
         }

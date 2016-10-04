@@ -15,4 +15,9 @@ public class blank extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
         finish();
-}}
+}
+    @Override
+    public void onBackPressed()
+    {
+        moveTaskToBack(true);
+    }}
