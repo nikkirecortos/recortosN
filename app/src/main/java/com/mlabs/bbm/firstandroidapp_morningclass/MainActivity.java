@@ -24,12 +24,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final EditText userName= (EditText)findViewById(R.id.etUser);
+        final EditText userName = (EditText) findViewById(R.id.etUser);
         final EditText password = (EditText) findViewById(R.id.etPassword);
         final Button btnSignup = (Button) findViewById(R.id.btnSignup);
         final Button btnLogin = (Button) findViewById(R.id.btnLogin);
         final Button btnShow = (Button) findViewById(R.id.btnShow);
-        final Button btnOntouch = (Button) findViewById(R.id.btnOntouch);
         final DatabaseAdapter sqlDB = new DatabaseAdapter(getApplicationContext());
         final Context context = this;
 
@@ -55,45 +54,36 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-                btnLogin.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
 
-                        if (userName.equals("") || password.equals("")) {
-                            Toast.makeText(getApplicationContext(), "Fill Up required fields", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        if (!validateEmail(userName.getText().toString())) {
-                            userName.setError("Not a valid Username or Email!");
+                if (userName.equals("") || password.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Fill Up required fields", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (!validateEmail(userName.getText().toString())) {
+                    userName.setError("Not a valid Username or Email!");
 
-                        }
-                        if (!validatePassword(password.getText().toString())) {
-                            password.setError("Not a valid password!");
-                        } else {
-                            userName.setError(null);
-                            password.setError(null);
-                            doLogin();
+                }
+                if (!validatePassword(password.getText().toString())) {
+                    password.setError("Not a valid password!");
+                } else {
+                    userName.setError(null);
+                    password.setError(null);
+                    doLogin();
 
-                        }
-                    }
-                });
-                btnSignup.setOnClickListener(new View.OnClickListener() {
-                                                 @Override
-                                                 public void onClick(View v) {
-                                                     Intent i = new Intent(MainActivity.this, Registerform.class);
-                                                     startActivity(i);
-                                                 }
-                                             });
-
-            btnOntouch.setOnClickListener(new View.OnClickListener()
-
-            {
-                @Override
-               public void onClick(View v){
-                Intent i = new Intent(MainActivity.this,OnTouch.class);
+                }
+            }
+        });
+        btnSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, Registerform.class);
                 startActivity(i);
             }
+        });
 
-            });}
+    }
 
                 private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
                 private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
