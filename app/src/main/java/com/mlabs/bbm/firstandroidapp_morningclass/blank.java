@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class blank extends AppCompatActivity {
+public class blank extends OnTouch {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
