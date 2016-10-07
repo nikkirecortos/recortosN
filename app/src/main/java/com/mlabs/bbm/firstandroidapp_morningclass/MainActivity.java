@@ -62,19 +62,19 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
                     DatabaseAdapter db = new DatabaseAdapter(context);
-                    if (db.validateUser(userName.getText().toString(), password.getText().toString()))
-                    {
+                    if (db.validateUser(userName.getText().toString(), password.getText().toString())) {
                         Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
 
-                    }
-                    else{
+                    } else {
                         Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(MainActivity.this, blank.class);
                         startActivity(intent);
-                        finish();
-                    }
 
+
+                    }
                 }
+            }
+        });
 
 
                 btnSignup.setOnClickListener(new View.OnClickListener() {
@@ -82,21 +82,19 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent i = new Intent(MainActivity.this, Registerform.class);
                         startActivity(i);
+                        finish();
+
                     }
                 });
 
-            }
 
-            private boolean validateUsername(String user) {
-                final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
-                Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-                Matcher matcher = pattern.matcher(user);
-                return matcher.matches();
             }
-
 
             public void onBackPressed() {
+
                 moveTaskToBack(true);
             }
-        });
-    }}
+
+
+        }
+
