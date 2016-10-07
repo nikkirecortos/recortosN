@@ -56,16 +56,16 @@ import android.widget.Toast;
 
 
                            }
+            public void onBackPressed()
+            {
 
-               @Override
-        protected  void onPause(){
-               super.onPause();
-              finish();
-          }
-            @Override
-            public void onBackPressed(){
-                Intent intent = new Intent(OnTouch.this, MainActivity.class);
-                startActivity(intent);
+                moveTaskToBack(true);
             }
 
-            }
+
+        }
+
+
+
+
+

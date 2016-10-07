@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         final Button btnSignup = (Button) findViewById(R.id.btnSignup);
         final Button btnLogin = (Button) findViewById(R.id.btnLogin);
         final Button btnShow = (Button) findViewById(R.id.btnShow);
-        final DatabaseAdapter sqlDB = new DatabaseAdapter(getApplicationContext());
+        DatabaseAdapter sqlDB = new DatabaseAdapter(getApplicationContext());
         final Context context = this;
 
 
@@ -57,66 +57,46 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                if (userName.equals("") || password.equals("")) {
+                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
                     Toast.makeText(getApplicationContext(), "Fill Up required fields", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if (!validateEmail(userName.getText().toString())) {
-                    userName.setError("Not a valid Username or Email!");
 
-                }
-                if (!validatePassword(password.getText().toString())) {
-                    password.setError("Not a valid password!");
                 } else {
-                    userName.setError(null);
-                    password.setError(null);
-                    doLogin();
+                    DatabaseAdapter db = new DatabaseAdapter(context);
+                    if (db.validateUser(userName.getText().toString(), password.getText().toString()))
+                    {
+                        Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
+
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, blank.class);
+                        startActivity(intent);
+                        finish();
+                    }
 
                 }
+
+
+                btnSignup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, Registerform.class);
+                        startActivity(i);
+                    }
+                });
+
             }
-        });
-        btnSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Registerform.class);
-                startActivity(i);
-            }
-        });
 
-    }
-
-                private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
-                private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-                private Matcher matcher;
-
-            public boolean validateEmail(String email) {
-                matcher = pattern.matcher(email);
+            private boolean validateUsername(String user) {
+                final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+                Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+                Matcher matcher = pattern.matcher(user);
                 return matcher.matches();
             }
 
-            private static final String USERNAME = "^[a-z0-9_-]{3,15}$";
-            private Pattern pattern1 = Pattern.compile(USERNAME);
-            private Matcher matcher1;
 
-
-            public boolean validatePassword(String Pw) {
-                return Pw.length() >= 8;
+            public void onBackPressed() {
+                moveTaskToBack(true);
             }
-
-            public void doLogin() {
-                Toast.makeText(getApplicationContext(), "Successfully Logged-in", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(MainActivity.this, blank.class);
-
-                startActivity(i);
-            }
-
-            protected void onPause() {
-                super.onPause();
-                finish();
-            }
-    public void onBackPressed()
-    {
-        moveTaskToBack(true);
-    }
-
-        }
+        });
+    }}

@@ -28,4 +28,6 @@ public class blank extends OnTouch {
     public void onBackPressed(){
         Intent intent = new Intent(blank.this, MainActivity.class);
         startActivity(intent);
-    }}
+    }
+
+}

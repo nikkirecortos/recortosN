@@ -29,8 +29,8 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_CREATED_AT = "created_at";
     static final String DATABASE_CREATE = "create table " + "LOGIN" + "( "
-                       + "ID" + " integer primary key autoincrement,"
-                      + "Email  text,Password text); ";
+            + "ID" + " integer primary key autoincrement,"
+            + "Email  text,Password text); ";
     public SQLiteDatabase db;
     private DatabaseHelper dbHelper;
 
@@ -45,7 +45,6 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
     }
 
     public void close() {
-
         db.close();
     }
 
@@ -62,7 +61,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
                 KEY_USER+ " TEXT UNIQUE, " +
                 KEY_EMAIL + " TEXT UNIQUE, " +
                 KEY_PASSWORD + " TEXT, " +
-                KEY_CREATED_AT + " TEXT)";
+                KEY_CREATED_AT + " TEXT )";
         db.execSQL(CREATE_USER_TABLE);
         Log.d(TAG,"Database created");
     }
@@ -87,39 +86,32 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         db.close();
         Log.d(TAG, "User added successfully!");
     }
-    public boolean validateUser(/*String userName*/String email, String password){
-        HashMap<String,String> user = new HashMap<String, String>();
-        String selectQuery = "SELECT * FROM " + TABLE_USER + "WHERE" +
-                KEY_EMAIL+ "=" + email +
-                KEY_PASSWORD+ "=" + password;
+    public boolean validateUser(String username/*,String email*/, String password) {
+        HashMap<String, String> user = new HashMap<String, String>();
+        String selectQuery = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USER + " = '" + username + "'  or " + KEY_EMAIL + " = '" + username + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-
         cursor.moveToFirst();
-        if (cursor.getCount() > 0){
-            user.put("firstname", cursor.getString(1));
-            user.put("lastname", cursor.getString(2));
-            user.put("username", cursor.getString(3));
-            user.put("email", cursor.getString(4));
-            user.put("password", cursor.getString(5));
-            user.put("created_at", cursor.getString(6));
+        System.out.println(username);
+        System.out.println(password);
+        if (cursor.getCount() > 0) {
+            if (password.equals(cursor.getString(5))) {
+                user.put("firstname", cursor.getString(1));
+                user.put("lastname", cursor.getString(2));
+                user.put("username", cursor.getString(3));
+                user.put("email", cursor.getString(4));
+                user.put("password", cursor.getString(5));
+                user.put("created_at", cursor.getString(6));
+                return true;
+            } else {
+                cursor.close();
+                db.close();
+                return false;
+
+            }
         }
-        cursor.close();
-        db.close();
-
-        Log.d(TAG, "Fetching user from SQLite: " + user.toString());
-
-        if(password.equals(user.get(password))){
-
-            Log.d(TAG, "Password was validated ");
-            return true;
-        }
-        else {
-
-            Log.d(TAG, "Password Incorrect ");
-            return false;
-        }
+        return false;
     }
 
     public long insertData (String UsernameReg, String PasswordReg, String EmailReg)
@@ -137,8 +129,8 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         return null;
     }
 
-       public boolean checkExist(String username, String email){
-        String qry = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_EMAIL +" = '"+email+"' or "+ KEY_USER + " = '" + username +"'";
+    public boolean checkExist(String username, String email){
+        String qry = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USER +" = ' " +username+ "'  or "+ KEY_EMAIL + " = '" + email +"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(qry,null);
         cursor.moveToFirst();
@@ -158,3 +150,5 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         Log.d(TAG, "Deleted all user from sqlite");
     }
 }
+
+
