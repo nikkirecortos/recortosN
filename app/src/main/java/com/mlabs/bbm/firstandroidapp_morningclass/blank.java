@@ -29,5 +29,10 @@ public class blank extends OnTouch {
         Intent intent = new Intent(blank.this, MainActivity.class);
         startActivity(intent);
     }
+    public void onPause(){
+        super.onPause();
+        finish();
+    }
+
 
 }

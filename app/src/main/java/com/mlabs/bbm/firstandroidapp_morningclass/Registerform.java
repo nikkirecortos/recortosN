@@ -139,5 +139,10 @@ public class Registerform extends Activity{
         Intent intent = new Intent(Registerform.this, MainActivity.class);
         startActivity(intent);
     }
+    public void onPause(){
+        super.onPause();
+        finish();
+    }
+
 
 }

@@ -96,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
                 moveTaskToBack(true);
             }
 
+    public void onPause(){
+        super.onPause();
+        finish();
+    }
 
         }
 

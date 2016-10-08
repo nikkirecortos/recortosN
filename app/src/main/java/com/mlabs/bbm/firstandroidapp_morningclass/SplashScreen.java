@@ -37,10 +37,11 @@ public class SplashScreen extends MainActivity {
         timerThread.start();
 
     }
-        @Override
-        protected void onPause(){
-            super.onPause();
-            finish();
-        }
+    public void onPause(){
+        super.onPause();
+        finish();
     }
+
+}
+
 

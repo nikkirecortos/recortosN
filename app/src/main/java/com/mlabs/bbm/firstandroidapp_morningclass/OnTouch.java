@@ -61,6 +61,10 @@ import android.widget.Toast;
 
                 moveTaskToBack(true);
             }
+            public void onPause(){
+                super.onPause();
+                finish();
+            }
 
 
         }
