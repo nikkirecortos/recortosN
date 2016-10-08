@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -86,33 +87,61 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         db.close();
         Log.d(TAG, "User added successfully!");
     }
-    public boolean validateUser(String username/*,String email*/, String password) {
+
+
+    public boolean validateUser(String username/*,String email*/,String password) {
+
         HashMap<String, String> user = new HashMap<String, String>();
         String selectQuery = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USER + " = '" + username + "'  or " + KEY_EMAIL + " = '" + username + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        System.out.println(username);
-        System.out.println(password);
-        if (cursor.getCount() > 0) {
-            if (password.equals(cursor.getString(5))) {
-                user.put("firstname", cursor.getString(1));
-                user.put("lastname", cursor.getString(2));
-                user.put("username", cursor.getString(3));
-                user.put("email", cursor.getString(4));
-                user.put("password", cursor.getString(5));
-                user.put("created_at", cursor.getString(6));
-                return true;
-            } else {
-                cursor.close();
-                db.close();
-                return false;
 
+        System.out.println(username + "from editext");
+        System.out.println(password + "from edittext");
+
+         cursor.moveToFirst();
+        //if (cursor.moveToFirst()){
+        //    System.out.println(cursor.getString(3));
+        //}
+
+
+        while (!cursor.isAfterLast()) {
+            //System.out.println(cursor.getString(1));
+            //System.out.println(cursor.getString(2));
+           // System.out.println(cursor.getString(3));
+           // System.out.println(cursor.getString(4));
+            //System.out.println(cursor.getString(5));
+            //System.out.println(cursor.getString(6));
+            String passworddb= cursor.getString(5);
+            cursor.moveToNext();
+            if(password.equals(passworddb)){
+                return true;
+            }
+            else{
+                return false;
             }
         }
+      cursor.close();
+
         return false;
     }
+    public String getUsername(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USER + " = '" + username + "'  or " + KEY_EMAIL + " = '" + username + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+
+        if (cursor.getCount() > 1) {
+            cursor.close();
+            return "NOT EXIST";
+            }
+            cursor.moveToFirst();
+            String password= cursor.getString(cursor.getColumnIndex("PASSWORD"));
+            return password;
+
+            }
+
 
     public long insertData (String UsernameReg, String PasswordReg, String EmailReg)
     {

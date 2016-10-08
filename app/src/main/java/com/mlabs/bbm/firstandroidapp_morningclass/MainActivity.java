@@ -62,13 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
                     DatabaseAdapter db = new DatabaseAdapter(context);
-                    if (db.validateUser(userName.getText().toString(), password.getText().toString())) {
-                        Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
-
-                    } else {
+                    if (db.validateUser(userName.getText().toString(),password.getText().toString())){
                         Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(MainActivity.this, blank.class);
                         startActivity(intent);
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+
 
 
                     }

@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 public class Registerform extends Activity{
     EditText first, sur, user, email,pwd1,pwd2;
     Button reg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class Registerform extends Activity{
                         Toast.makeText(getApplicationContext(),"Registration failed! Email/username already in use.", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        sqlDB.registeruser("","","",email.getText().toString().trim(),pwd1.getText().toString().trim(),getDate());
+                        sqlDB.registeruser(first.getText().toString(),sur.getText().toString(),user.getText().toString(),email.getText().toString().trim(),pwd1.getText().toString().trim(),getDate());
                         Toast.makeText(getApplicationContext(),"Registration success!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Registerform.this, MainActivity.class);
                         startActivity(intent);
